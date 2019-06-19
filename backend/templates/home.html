@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
-    <header class="masthead" style="background-image: url('assets/img/header-bg.jpg');height: 100vh;">
+    <header class="masthead" style="background-image: url('static/img/header-bg.jpg');height: 100vh;">
         <div class="container">
             <div class="intro-text" style="height: 100vh;">
                 <div class="intro-lead-in"><span>Welcome To Website!</span></div>
-                <div class="intro-heading text-uppercase"><span>It's Nice To Meet You</span></div><a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" role="button" href="Survey.html" style="color: rgb(52,58,64);">Take Our Survey</a></div>
+                <div class="intro-heading text-uppercase"><span>It's Nice To Meet You</span></div><a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" role="button" href="{{url_for('survey')}}" style="color: rgb(52,58,64);">Take Our Survey</a></div>
         </div>
     </header>
 {% endblock content %}
