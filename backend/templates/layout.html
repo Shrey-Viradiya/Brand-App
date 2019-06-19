@@ -4,7 +4,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Home - Brand</title>
+    {% if title %}
+        <title>Brand - {{ title }}</title>
+    {% else %}
+        <title>Brand</title>
+    {% endif %}
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kaushan+Script">
@@ -21,26 +25,40 @@
 
 <body id="page-top" style="height: 100vh;">
     <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-dark" id="mainNav" style="height: 69px;">
-        <div class="container"><a class="navbar-brand" href="index.html">Brand</a><button class="navbar-toggler navbar-toggler-right" data-toggle="collapse" data-target="#navbarResponsive" type="button" data-toogle="collapse" aria-controls="navbarResponsive" aria-expanded="false"
+        <div class="container"><a class="navbar-brand" href="/">Brand</a><button class="navbar-toggler navbar-toggler-right" data-toggle="collapse" data-target="#navbarResponsive" type="button" data-toogle="collapse" aria-controls="navbarResponsive" aria-expanded="false"
                 aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="nav navbar-nav ml-auto text-uppercase">
-                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="Survey.html">Survey Of The Month</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="about.html">About</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="team.html">Team</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="contact.html">Contact</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="login.html">Login</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('survey') }}">Survey Of The Month</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('about') }}">About</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('team') }}">Team</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('contact') }}">Contact</a></li>
+
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
+                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('login') }}">Login</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
-    <header class="masthead" style="background-image: url('assets/img/header-bg.jpg');height: 100vh;">
-        <div class="container">
-            <div class="intro-text" style="height: 100vh;">
-                <div class="intro-lead-in"><span>Welcome To Website!</span></div>
-                <div class="intro-heading text-uppercase"><span>It's Nice To Meet You</span></div><a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" role="button" href="Survey.html" style="color: rgb(52,58,64);">Take Our Survey</a></div>
+    <main role="main" class="container">
+        <div class="row">
+          <div class="col-md-8">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }}">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+          </div>
         </div>
-    </header>
+    </main>
+    {% block content %}{% endblock %}
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
