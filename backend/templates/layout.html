@@ -35,8 +35,10 @@
 <body id="page-top" style="height: 100vh;">
     <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-dark" id="mainNav" style="height: 69px;">
         <div class="container"><a class="navbar-brand" href="/">Brand</a>
-          <button class="navbar-toggler navbar-toggler-right" data-toggle="collapse" data-target="#navbarResponsive" type="button" data-toogle="collapse" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarToggle">
                 <ul class="nav navbar-nav ml-auto text-uppercase">
                     <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('survey') }}">Survey Of The Month</a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('about') }}">About</a></li>
@@ -68,10 +70,13 @@
         </div>
     </main>
     {% block content %}{% endblock %}
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+    <!-- <script src="assets/js/jquery.min.js"></script> -->
+    <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+    <!-- <script src="assets/bootstrap/js/bootstrap.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-    <script src="assets/js/agency.js"></script>
+    <script src="{{ url_for('static', filename='agency.js') }}"></script>
+    <!-- <script src="assets/js/agency.js"></script> -->
     <script src="https://unpkg.com/@bootstrapstudio/bootstrap-better-nav/dist/bootstrap-better-nav.min.js"></script>
 </body>
 
