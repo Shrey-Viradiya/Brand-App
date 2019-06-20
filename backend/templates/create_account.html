@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block content %}
+<section id="login-form" style="margin: auto;">
+    <form class="d-lg-flex flex-column justify-content-lg-center" method="post" style="font-family: Montserrat, sans-serif;">
+        <h1 class="text-center" style="color: rgb(254,209,54);margin-bottom: 35px;">Register</h1>
+        <div class="form-group">
+
+                {% if form.username.errors %}
+                    {{ form.username(class="form-control input shadow is-invalid", placeholder="Enter Username") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.username.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.username(class="form-control input shadow", placeholder="Enter Username") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control input shadow is-invalid", placeholder="Enter Email ID") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.email.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.email(class="form-control input shadow", placeholder="Enter Email ID") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {% if form.password.errors %}
+                    {{ form.password(class="form-control input shadow is-invalid", placeholder="Enter Password") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.password.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.password(class="form-control input shadow", placeholder="Enter Password") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {% if form.confirm_password.errors %}
+                    {{ form.confirm_password(class="form-control input shadow is-invalid", placeholder="Confirm Password") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.confirm_password.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.confirm_password(class="form-control input shadow", placeholder="Confirm Password") }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group d-flex d-lg-flex justify-content-center justify-content-lg-center">
+                {{ form.submit(class="btn btn-primary input") }}
+        </div>
+</section>
+{% endblock content %}
