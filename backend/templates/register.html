@@ -1,14 +1,80 @@
 {% extends "layout.html" %}
 {% block content %}
-    <section id="login-form" style="margin: auto;">
-        <form class="d-lg-flex flex-column justify-content-lg-center" method="post" style="font-family: Montserrat, sans-serif;" action="">
-            <h1 class="text-center" style="color: rgb(254,209,54);margin-bottom: 35px;">Enter Master Password</h1>
-            <div class="form-group">
-                {{ form.master_password(class=" shadow form-control input", placeholder="Enter the Master Password") }}
-            </div>
-            <div class="form-group d-flex d-lg-flex justify-content-center justify-content-lg-center">
+<main role="main" class="container" style="margin-top: 59px;">
+    <div class="row d-flex d-lg-flex justify-content-lg-center justify-content-center" style="padding-top: 10px">
+      <div class="col-md-8" >
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="d-flex d-lg-flex justify-content-lg-center justify-content-center alert alert-{{ category }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        
+      </div>
+    </div>
+  </main>
+    <section class="content-section"style="margin: auto">
+        <form method="POST" id="login-form" action=""style="margin: auto;margin-top:-20px">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <h1 class="text-center" style="color: rgb(254,209,54);margin-bottom: 35px;">Create Account</h1>
+                <div class="form-group">
+
+                    {% if form.username.errors %}
+                        {{ form.username(class="form-control shadow input is-invalid",placeholder="Enter Username") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.username(class="form-control shadow input",placeholder="Enter Username") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control shadow input is-invalid",placeholder="Enter Email ID") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control shadow input",placeholder="Enter Email ID") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {% if form.password.errors %}
+                        {{ form.password(class="form-control shadow input is-invalid",placeholder="Enter Password") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.password(class="form-control shadow input",placeholder="Enter Password") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {% if form.confirm_password.errors %}
+                        {{ form.confirm_password(class="form-control shadow input is-invalid",placeholder="Confirm Password") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.confirm_password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.confirm_password(class="form-control shadow input",placeholder="Confirm Password") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group d-flex d-lg-flex justify-content-lg-center justify-content-center">
                 {{ form.submit(class="btn btn-primary shadow input") }}
             </div>
         </form>
     </section>
+    
 {% endblock content %}

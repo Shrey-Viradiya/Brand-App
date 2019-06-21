@@ -1,5 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import login_user, current_user, logout_user, login_required
+from flask_wtf import FlaskForm
 from backend import app,bcrypt,db
 from backend.models import User
 from backend.forms import LoginForm, RegistrationForm, PermissionForm
@@ -47,42 +48,33 @@ def login():
 #         return redirect(url_for('login'))
 #     return render_template('create_account.html', title='Create Account', form=form)
 
-def createaccount():
-        form = RegistrationForm()
-        # render_template('create_account.html', title='Register', form=form)
-        # return render_template('create_account.html', title='Register', form=form)
-        if form.validate_on_submit():
-            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-            user = User(username=form.username.data, email=form.email.data, password=hashed_password)
-            db.session.add(user)
-            db.session.commit()
-            flash('Your account has been created! You are now able to log in', 'success')
-            return redirect(url_for('login'))
-        else:
-            flash('Failed! Try Again')
-        return render_template('create_account.html', title='Register', form=form)
+# @app.route("/createaccount", methods=['GET', 'POST'])
+# def createaccount(FlaskForm):
+#     form = FlaskForm()
+#     if form.validate_on_submit():
+#         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+#         user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+#         db.session.add(user)
+#         db.session.commit()
+#         flash('Your account has been created! You are now able to log in', 'success')
+#         return redirect(url_for('login'))
+#     else:
+#         flash('Failed! Try Again')
+#     return render_template('create_account.html', title='Register', form=form)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    form = PermissionForm()
-    if form.master_password.data == os.environ.get('REG_KEY'):
-        form = RegistrationForm()
-        if form.validate_on_submit():
-            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-            user = User(username=form.username.data, email=form.email.data, password=hashed_password)
-            db.session.add(user)
-            db.session.commit()
-            flash('Your account has been created! You are now able to log in', 'success')
-            return redirect(url_for('login'))
-        else:
-            flash('Failed! Try Again')
-        return render_template('create_account.html', title='Register', form=form)
-        # createaccount()   
-    else:
-        flash('Master Login Failed! Try Again', 'danger')
-    return render_template('register.html', title='Access', form=form)
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your account has been created! You are now able to log in', 'success')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
 
 @app.route("/contact")
 def contact():
@@ -96,6 +88,3 @@ def survey():
 def logout():
     logout_user()
     return redirect(url_for('home'))
-
-
-
