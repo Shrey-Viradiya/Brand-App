@@ -34,18 +34,7 @@
                         {{ form.username(class="form-control shadow input",placeholder="Enter Username") }}
                     {% endif %}
                 </div>
-                <div class="form-group">
-                    {% if form.email.errors %}
-                        {{ form.email(class="form-control shadow input is-invalid",placeholder="Enter Email ID") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.email.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.email(class="form-control shadow input",placeholder="Enter Email ID") }}
-                    {% endif %}
-                </div>
+                
                 <div class="form-group">
                     {% if form.password.errors %}
                         {{ form.password(class="form-control shadow input is-invalid",placeholder="Enter Password") }}

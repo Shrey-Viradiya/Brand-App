@@ -29,4 +29,24 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}')"
+        return f"UserID('{self.id}') Email('{self.email}')"
+
+class RequestID(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    
+    def get_request_token(self, expires_sec=1800):
+        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'request_id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_request_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['request_id']
+        except:
+            return None
+        return RequestID.query.get(user_id)
+
+    def __repr__(self):
+        return f"RequestID('{self.email}')"
