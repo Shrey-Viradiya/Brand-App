@@ -38,3 +38,9 @@ class RequestAccount(FlaskForm):
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
     submit = SubmitField('Request Account')
+
+class ContactForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    content = TextAreaField('Message', validators=[DataRequired()])
+    submit = SubmitField('Send')

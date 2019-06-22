@@ -20,6 +20,7 @@
         <form method="POST" id="login-form" action=""style="margin: auto;margin-top:-20px">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
+                <h1 class="text-center" style="color: rgb(254,209,54);margin-bottom: 35px;">Request Account</h1>
                 <div class="form-group">
                     {% if form.email.errors %}
                         {{ form.email(class="form-control shadow input is-invalid",placeholder="Enter Email ID") }}
