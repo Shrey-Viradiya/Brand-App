@@ -173,3 +173,21 @@ def error_500(error):
 # @app.route("/test")
 # def test():
 #     return render_template('500.html')
+
+
+# Under Construction
+
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    return render_template('dashboard.html',title = 'Dashboard')
+
+@app.route("/createmonth")
+@login_required
+def createmonth():
+    return render_template('createmonth.html',title = 'Dashboard')
+
+@app.route("/addquestion")
+@login_required
+def addquestion():
+    return render_template('addquestion.html',title = 'Dashboard')

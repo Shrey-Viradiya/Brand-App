@@ -50,3 +50,19 @@ class RequestID(db.Model):
 
     def __repr__(self):
         return f"RequestID('{self.email}')"
+
+class Month(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    month = db.Column(db.String(120),unique = True,nullable = False)
+    primary_subject = db.Column(db.String(120),unique = True, nullable =False)
+    comment = db.Column(db.text,nullable = False)
+    questions = db.relationship('Question',backref = 'month',lazy = True)
+
+    def __repr__(self):
+        return f"Month: {self.month} with primary subject: {self.primary_subject} \n\n Comments: {self.comment})"
+
+class Question(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    question = db.Column(db.text,nullable = False)
+    options = db.Column(db.String,nullable = False)
+    answer = db.Column(db.String, nullable = False)

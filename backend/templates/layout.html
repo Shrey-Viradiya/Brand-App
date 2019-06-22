@@ -40,14 +40,18 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarToggle">
                 <ul class="nav navbar-nav ml-auto text-uppercase">
+                    
+
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('createmonth') }}">Create Month</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('addquestion') }}">Add Question</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
                     <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('survey') }}">Survey Of The Month</a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('about') }}">About</a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('team') }}">Team</a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('contact') }}">Contact</a></li>
-
-                    {% if current_user.is_authenticated %}
-                    <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('logout') }}">Logout</a></li>
-                    {% else %}
                     <li class="nav-item" role="presentation"><a class="nav-link js-scroll-trigger" href="{{ url_for('login') }}">Login</a></li>
                     {% endif %}
                 </ul>
