@@ -16,9 +16,56 @@
       </div>
     </div>
   </main>
-    <section class="d-flex d-lg-flex flex-column justify-content-center align-items-center align-content-center justify-content-lg-center align-items-lg-center" style="width: 90%;margin: auto;">
-        <h1 class="text-center" style="color: rgb(254,209,54);margin-bottom: 35px;">Create Month</h1>
-        <p class="text-justify" style="margin-top: 30px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
-    </section>
-    {% endblock content %}
+  <section class="content-section"style="margin: auto">
+      <form method="POST" id="login-form" action=""style="margin: auto;margin-top:-20px">
+          {{ form.hidden_tag() }}
+          <fieldset class="form-group">
+              <h1 class="text-center" style="color: rgb(254,209,54);margin-bottom: 35px;">Create Month</h1>
+              <div class="form-group">
+
+                  {% if form.month.errors %}
+                      {{ form.month(class="form-control shadow input is-invalid",placeholder="Enter Month Name") }}
+                      <div class="invalid-feedback">
+                          {% for error in form.month.errors %}
+                              <span>{{ error }}</span>
+                          {% endfor %}
+                      </div>
+                  {% else %}
+                      {{ form.month(class="form-control shadow input",placeholder="Enter Month Name") }}
+                  {% endif %}
+              </div>
+
+              <div class="form-group">
+
+                    {% if form.pr_sub.errors %}
+                        {{ form.pr_sub(class="form-control shadow input is-invalid",placeholder="Enter Primary Subject") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.pr_sub.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.pr_sub(class="form-control shadow input",placeholder="Enter Primary Subject") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                        {% if form.comment.errors %}
+                            {{ form.comment(class="form-control shadow input is-invalid",placeholder="Enter Comments for the Month",rows="5") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.comment.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.comment(class="form-control shadow input",placeholder="Message",rows="5") }}
+                        {% endif %}
+                    </div>  
+              
+              
+          </fieldset>
+          <div class="form-group d-flex d-lg-flex justify-content-lg-center justify-content-center">
+              {{ form.submit(class="btn btn-primary shadow input") }}
+          </div>
+      </form>
+  </section>
+{% endblock content %}

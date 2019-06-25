@@ -54,8 +54,8 @@ class RequestID(db.Model):
 class Month(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     month = db.Column(db.String(120),unique = True,nullable = False)
-    primary_subject = db.Column(db.String(120),unique = True, nullable =False)
-    comment = db.Column(db.text,nullable = False)
+    primary_subject = db.Column(db.String(120), nullable =False)
+    comment = db.Column(db.Text,nullable = False)
     questions = db.relationship('Question',backref = 'month',lazy = True)
 
     def __repr__(self):
@@ -63,6 +63,10 @@ class Month(db.Model):
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    question = db.Column(db.text,nullable = False)
+    question = db.Column(db.Text,nullable = False)
     options = db.Column(db.String,nullable = False)
     answer = db.Column(db.String, nullable = False)
+    month_id = db.Column(db.Integer, db.ForeignKey('month.id'),nullable = False)
+
+    def __repr__(self):
+        return f"Question: {self.question} with Options: [{self.options}] \n\n Answer: {self.answer})"

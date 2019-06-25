@@ -17,8 +17,72 @@
     </div>
   </main>
     <section class="d-flex d-lg-flex flex-column justify-content-center align-items-center align-content-center justify-content-lg-center align-items-lg-center" style="width: 90%;margin: auto;">
-        <h1 class="text-center" style="color: rgb(254,209,54);margin-bottom: 35px;">Add Question</h1>
-        <p class="text-justify" style="margin-top: 30px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
-    </section>
+        
+      <form method="POST" id="login-form" action=""style="margin: auto;margin-top:-20px">
+        {{ form.hidden_tag() }}
+
+        <fieldset class="form-group">
+          <h1 class="text-center" style="color: rgb(254,209,54);margin-bottom: 35px;">Add Question</h1>
+
+          <div class="form-group">
+            {% if form.question.errors %}
+                {{ form.question(class="form-control shadow input is-invalid",placeholder="Question",rows="3") }}
+                <div class="invalid-feedback">
+                    {% for error in form.question.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.question(class="form-control shadow input",placeholder="Question",rows="3") }}
+            {% endif %}
+        </div>
+          <div class="form-group">
+
+              {% if form.options.errors %}
+                  {{ form.options(class="form-control shadow input is-invalid",placeholder="Enter the Options here") }}
+                  <div class="invalid-feedback">
+                      {% for error in form.options.errors %}
+                          <span>{{ error }}</span>
+                      {% endfor %}
+                  </div>
+              {% else %}
+                  {{ form.options(class="form-control shadow input",placeholder="Enter the Options here") }}
+              {% endif %}
+          </div>
+
+          <div class="form-group">
+
+                {% if form.answer.errors %}
+                    {{ form.answer(class="form-control shadow input is-invalid",placeholder="Enter Correct Answer") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.answer.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.answer(class="form-control shadow input",placeholder="Enter Correct Answer") }}
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+
+              {% if form.month.errors %}
+                  {{ form.month(class="btn btn-primary dropdown-toggle is-invalid") }}
+                  <div class="invalid-feedback">
+                      {% for error in form.month.errors %}
+                          <span>{{ error }}</span>
+                      {% endfor %}
+                  </div>
+              {% else %}
+                  {{ form.month(class="btn btn-primary dropdown-toggle")}}
+              {% endif %}
+          </div>
+          
+          
+      </fieldset>
+      <div class="form-group d-flex d-lg-flex justify-content-lg-center justify-content-center">
+          {{ form.submit(class="btn btn-primary shadow input") }}
+      </div>
+    </form>
+      </section>
     {% endblock content %}

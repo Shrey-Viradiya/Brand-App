@@ -1,9 +1,9 @@
 import os
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from backend.models import User
+from backend.models import User, Month
 
 class LoginForm(FlaskForm):
     email = StringField('Email',
@@ -44,3 +44,23 @@ class ContactForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     content = TextAreaField('Message', validators=[DataRequired()])
     submit = SubmitField('Send')
+
+class AddQuestion(FlaskForm):
+    question = TextAreaField('Question', validators=[DataRequired()])
+    options = StringField('Options', validators=[DataRequired()])
+    answer = StringField('Answer', validators=[DataRequired()])
+    lst = Month.query.filter_by(id = Month.id).all()
+    choices = [(month.id, month.month) for month in lst]
+    month = SelectField('Month', choices= choices, coerce = int)
+    submit = SubmitField('Add Question')
+
+class CreateMonth(FlaskForm):
+    month = StringField('Month', validators=[DataRequired()])
+    pr_sub = StringField('Primary Subject', validators=[DataRequired()])
+    comment = TextAreaField('Comment', validators=[DataRequired()])
+    submit = SubmitField('Create Month')
+
+    def validate_month(self, month):
+        mon = Month.query.filter_by(month = month.data).first()
+        if mon:
+            raise ValidationError('That month is already declared. Please choose a different one.')

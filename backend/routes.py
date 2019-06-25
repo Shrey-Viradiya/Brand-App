@@ -2,8 +2,8 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_wtf import FlaskForm
 from backend import app,bcrypt,db,mail
-from backend.models import User, RequestID
-from backend.forms import LoginForm, RegistrationForm, PermissionForm,RequestAccount,ContactForm
+from backend.models import User, RequestID, Month, Question
+from backend.forms import LoginForm, RegistrationForm, PermissionForm,RequestAccount,ContactForm,AddQuestion,CreateMonth
 from flask_mail import Message
 import os
 
@@ -182,12 +182,26 @@ def error_500(error):
 def dashboard():
     return render_template('dashboard.html',title = 'Dashboard')
 
-@app.route("/createmonth")
+@app.route("/createmonth", methods=['GET', 'POST'])
 @login_required
 def createmonth():
-    return render_template('createmonth.html',title = 'Dashboard')
+    form = CreateMonth()
+    if form.validate_on_submit():
+        month = Month(month = form.month.data , primary_subject = form.pr_sub.data, comment = form.comment.data)
+        db.session.add(month)
+        db.session.commit()
+        flash('Month is created successfully!','success')
+        return redirect(url_for('dashboard'))
+    return render_template('createmonth.html',title = 'Dashboard',form=form)
 
-@app.route("/addquestion")
+@app.route("/addquestion", methods=['GET', 'POST'])
 @login_required
 def addquestion():
-    return render_template('addquestion.html',title = 'Dashboard')
+    form = AddQuestion()
+    if form.validate_on_submit():
+        question = Question(question = form.question.data , options = form.options.data, answer = form.answer.data, month_id= form.month.data)
+        db.session.add(question)
+        db.session.commit()
+        flash('Question is Added successfully!','success')
+        return redirect(url_for('dashboard'))
+    return render_template('addquestion.html',title = 'Dashboard',form=form)
