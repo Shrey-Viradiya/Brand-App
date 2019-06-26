@@ -1,9 +1,9 @@
 import os
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField, RadioField, FieldList,FormField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from backend.models import User, Month
+from backend.models import User, Month, Question
 
 class LoginForm(FlaskForm):
     email = StringField('Email',
@@ -64,3 +64,12 @@ class CreateMonth(FlaskForm):
         mon = Month.query.filter_by(month = month.data).first()
         if mon:
             raise ValidationError('That month is already declared. Please choose a different one.')
+
+class Questions(FlaskForm):
+    reply = RadioField(label = [], choices = [] ,coerce = str)
+
+class SurveyForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    questions = FieldList(FormField(Questions))
+    submit = SubmitField('Submit Answers')

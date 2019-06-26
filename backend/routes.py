@@ -3,7 +3,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flask_wtf import FlaskForm
 from backend import app,bcrypt,db,mail
 from backend.models import User, RequestID, Month, Question
-from backend.forms import LoginForm, RegistrationForm, PermissionForm,RequestAccount,ContactForm,AddQuestion,CreateMonth
+from backend.forms import LoginForm, RegistrationForm, PermissionForm,RequestAccount,ContactForm,AddQuestion,CreateMonth, SurveyForm
 from flask_mail import Message
 import os
 
@@ -85,9 +85,6 @@ def register(token):
 
 
 
-@app.route("/survey")
-def survey():
-    return render_template('survey.html')
 
 
 @app.route("/request_account", methods=['GET', 'POST'])
@@ -105,6 +102,30 @@ def request_account():
         return redirect(url_for('login'))
     return render_template('requestaccount.html', title='Reset Password', form=form)
 
+
+@app.route("/createmonth", methods=['GET', 'POST'])
+@login_required
+def createmonth():
+    form = CreateMonth()
+    if form.validate_on_submit():
+        month = Month(month = form.month.data , primary_subject = form.pr_sub.data, comment = form.comment.data)
+        db.session.add(month)
+        db.session.commit()
+        flash('Month is created successfully!','success')
+        return redirect(url_for('dashboard'))
+    return render_template('createmonth.html',title = 'Dashboard',form=form)
+
+@app.route("/addquestion", methods=['GET', 'POST'])
+@login_required
+def addquestion():
+    form = AddQuestion()
+    if form.validate_on_submit():
+        question = Question(question = form.question.data , options = form.options.data, answer = form.answer.data, month_id= form.month.data)
+        db.session.add(question)
+        db.session.commit()
+        flash('Question is Added successfully!','success')
+        return redirect(url_for('dashboard'))
+    return render_template('addquestion.html',title = 'Dashboard',form=form)
 
 #Utilities
 
@@ -172,7 +193,7 @@ def error_500(error):
 
 # @app.route("/test")
 # def test():
-#     return render_template('500.html')
+#     return render_template('test.html')
 
 
 # Under Construction
@@ -182,26 +203,20 @@ def error_500(error):
 def dashboard():
     return render_template('dashboard.html',title = 'Dashboard')
 
-@app.route("/createmonth", methods=['GET', 'POST'])
-@login_required
-def createmonth():
-    form = CreateMonth()
-    if form.validate_on_submit():
-        month = Month(month = form.month.data , primary_subject = form.pr_sub.data, comment = form.comment.data)
-        db.session.add(month)
-        db.session.commit()
-        flash('Month is created successfully!','success')
-        return redirect(url_for('dashboard'))
-    return render_template('createmonth.html',title = 'Dashboard',form=form)
 
-@app.route("/addquestion", methods=['GET', 'POST'])
-@login_required
-def addquestion():
-    form = AddQuestion()
+@app.route("/survey", methods=['GET', 'POST'])
+def survey():
+    qns = Question.query.filter_by(month_id = 1).all()
+    dic = [{'question': question.question,'choices': [(choice,choice) for choice in question.options.split(',')] ,'answer': question.answer} for question in qns]
+    rep = [{'reply' : 'none'} for question in qns]
+    form = SurveyForm(questions = rep)
+    for i in range(len(form.questions)):
+        form.questions[i].reply.choices = dic[i]['choices']
+        form.questions[i].reply.label = [dic[i]['question']]
+
     if form.validate_on_submit():
-        question = Question(question = form.question.data , options = form.options.data, answer = form.answer.data, month_id= form.month.data)
-        db.session.add(question)
-        db.session.commit()
-        flash('Question is Added successfully!','success')
-        return redirect(url_for('dashboard'))
-    return render_template('addquestion.html',title = 'Dashboard',form=form)
+        y = form.questions.data
+        x = f'''q : {dic[0]['question']}
+                reply: {y[0]['reply']}'''
+        return x
+    return render_template('survey.html',questions = qns,form = form)

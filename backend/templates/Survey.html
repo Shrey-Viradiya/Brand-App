@@ -17,22 +17,69 @@
     </div>
   </main>
     <section style="width: 90%;margin: auto;">
-        <form class="form-big">
-            <div class="form-group" style="font-family: Montserrat, sans-serif;"><label>Email ID</label><input class="shadow form-control input" type="email" name="email" required="" placeholder="Enter Your Email ID Here"></div>
-            <div class="form-group" style="font-family: Montserrat, sans-serif;"><label>Name</label><input class="shadow form-control input" type="text" name="name" required="" placeholder="Enter Your Name Here" maxlength="256"></div>
-            <h1 class="text-center" style="font-family: Montserrat, sans-serif;padding: 5px;padding-top: 15px;">Survey</h1>
-            <div class="card shadow" style="border-radius: 20px;border-width: 0px;">
-                <div class="card-body">
-                    <div class="form-group" style="font-family: Montserrat, sans-serif;"><label style="font-weight: bold;">Question 1</label>
-                        <p></p><label>What is thought about the performance of XYZ programm?</label>
-                        <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="Really Good" id="formCheck-1"><label class="form-check-label">Really Good</label></div>
-                        <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="Okay" id="formCheck-1"><label class="form-check-label">Okay</label></div>
-                        <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="Poor" id="formCheck-1"><label class="form-check-label">Poor</label></div>
-                        <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="Needs a lot of work" id="formCheck-1"><label class="form-check-label">Need a lots of work</label></div>
+      <form method="POST" id="login-form" action=""style="margin: auto;margin-top:-20px">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <h1 class="text-center" style="color: rgb(254,209,54);margin-bottom: 35px;">Survey</h1>
+            <div class="form-group">
+
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control shadow input is-invalid",placeholder="Enter Email ID") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.email.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
                     </div>
-                </div>
+                {% else %}
+                    {{ form.email(class="form-control shadow input",placeholder="Enter Email ID") }}
+                {% endif %}
             </div>
-            <div class="form-group d-flex d-sm-flex d-md-flex justify-content-center justify-content-sm-center justify-content-md-center align-items-md-center" style="margin-top: 35px;"><button class="btn btn-primary text-center d-xl-flex justify-content-xl-center align-items-xl-center" type="button" style="border-radius: 20px;">SUBMIT</button></div>
-        </form>
+
+            <div class="form-group">
+
+                  {% if form.name.errors %}
+                      {{ form.name(class="form-control shadow input is-invalid",placeholder="Enter Your Name") }}
+                      <div class="invalid-feedback">
+                          {% for error in form.name.errors %}
+                              <span>{{ error }}</span>
+                          {% endfor %}
+                      </div>
+                  {% else %}
+                      {{ form.name(class="form-control shadow input",placeholder="Enter Your Name") }}
+                  {% endif %}
+              </div>
+              
+              {% for qn in form.questions %}
+              <div class="card shadow" style="border-radius: 20px;border-width: 0px;margin-bottom: 20px">
+                  <div class="card-body">
+              <div class="form-group">
+                {{ qn.hidden_tag() }}
+                {% for subfield in qn.reply.label %}
+
+                <p></p><label>{{subfield}}</label>
+                
+                {% endfor %}
+
+                {% for subfield in qn.reply %}
+                
+                <div class="form-check">
+                    <tr>
+                        <td>{{ subfield(class="form-check-input") }}</td>
+                        <td>{{ subfield.label(class="form-check-label") }}</td>
+                    </tr>
+                </div>
+              
+                    
+                {% endfor %}
+              </div>
+            </div>
+            </div>
+            {% endfor %}
+            
+        </fieldset>
+        <div class="form-group d-flex d-lg-flex justify-content-lg-center justify-content-center">
+            {{ form.submit(class="btn btn-primary shadow input") }}
+        </div>
+    </form>
     </section>
 {% endblock content %}
