@@ -56,6 +56,8 @@ class Month(db.Model):
     month = db.Column(db.String(120),unique = True,nullable = False)
     primary_subject = db.Column(db.String(120), nullable =False)
     comment = db.Column(db.Text,nullable = False)
+    target = db.Column(db.Integer, nullable = False)
+    target_achived = db.Column(db.Integer, nullable = False)
     questions = db.relationship('Question',backref = 'month',lazy = True)
 
     def __repr__(self):

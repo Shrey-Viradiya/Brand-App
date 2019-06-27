@@ -3,12 +3,9 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flask_wtf import FlaskForm
 from backend import app,bcrypt,db,mail
 from backend.models import User, RequestID, Month, Question
-from backend.forms import LoginForm, RegistrationForm, PermissionForm,RequestAccount,ContactForm,AddQuestion,CreateMonth, SurveyForm
+from backend.forms import LoginForm, RegistrationForm, PermissionForm,RequestAccount,ContactForm,AddQuestion,CreateMonth, SurveyForm,ActiveMonth
 from flask_mail import Message
 import csv 
-
-
-
 
 #Static Routes
 
@@ -156,7 +153,10 @@ def survey():
     if current_user.is_authenticated:
         flash('User must be logged out to access this page','warning')
         return redirect(url_for('dashboard'))
-    month = Month.query.filter_by(month = 'June-2019-beta').first()
+
+    with open('backend/month','r') as f:
+        temp = f.readline()
+    month = Month.query.filter_by(month =  temp).first()
     if month:
         month_id = month.id
         qns = Question.query.filter_by(month_id = month_id).all()
@@ -171,18 +171,16 @@ def survey():
             score = 0
             replies = form.questions.data
             maximum = len(replies)
+            month.target_achived += 1
+            db.session.commit()
             for i in range(maximum):
                 if replies[i]['reply'] == dic[i]['answer']:
                     score += 1
 
-            # y = form.questions.data
-            # x = f'''q : {dic[0]['question']}
-            #         reply: {y[0]['reply']}'''
             with open('backend/record.csv','a') as csvfile:
-                cs = csv.DictWriter(csvfile,fieldnames = ['Email','Name','Score'])
-                cs.writerows([{'Email':form.email.data,'Name':form.name.data,'Score':score}])
+                cs = csv.DictWriter(csvfile,fieldnames = ['Email','Name','Month','Score'])
+                cs.writerows([{'Email':form.email.data,'Name':form.name.data,'Month':temp,'Score':score}])
 
-            send_record()
             flash(f'You have score {score} point(s) out of {maximum}','info')
             return redirect('about')
     else:
@@ -283,9 +281,34 @@ def error_500(error):
 
 # Under Construction
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    return render_template('dashboard.html',title = 'Dashboard')
+
+    with open('backend/month','r') as f:
+        temp = f.readline()
+    data = {
+    'target' : Month.query.filter_by(month = temp).first().target,
+    'target_achived' : Month.query.filter_by(month = temp).first().target_achived,
+    'total_months' : len(Month.query.all()),
+    'total_questions' : len(Question.query.all()),
+    }
+
+    form2 = ActiveMonth()
 
 
+    if form2.validate_on_submit():
+        with open('backend/month','w') as f:
+            f.writelines(Month.query.filter_by(id = form2.month.data).first().month)
+        
+        return redirect('dashboard')
+    return render_template('dashboard.html',title = 'Dashboard',data = data,form2 = form2,month_active= temp)
+
+
+@app.route("/send")
+@login_required
+def send():
+    send_database()
+    send_record()
+    flash('Database and record send to admin email.','info')
+    return redirect('dashboard')

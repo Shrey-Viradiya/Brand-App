@@ -16,12 +16,14 @@
       </div>
     </div>
   </main>
-  <section class="d-xl-flex flex-row justify-content-xl-center align-items-xl-center" id="dashboard" style="margin-top: 69px;padding-top: 50px;">
-    <div class="row" style="width: 100%;margin-right: auto;margin-left: auto;">
+  <h1 class="text-center" style="color: rgb(254,209,54);margin-bottom: 35px;">Active Month: {{month_active}}</h1>
+  <section class="" id="dashboard" style="margin-top: 0px; padding-top: 0px;">
+    
+    <div class="row" style="width: 100%; margin-right: auto;margin-left: auto;">
         <div class="col-12 col-md-6 col-lg-4 item" style="margin-top: 0px;margin-bottom: 10px;">
             <div class="card shadow-lg" id="dash-card">
                 <div class="card-body text-uppercase d-xl-flex justify-content-xl-center align-items-xl-center" id="dash-card" style="filter: blur(0px) brightness(100%) saturate(100%) sepia(0%);">
-                    <h1 class="text-center">452 / 600&nbsp;</h1>
+                    <h1 class="text-center">{{data['target_achived']}} / {{data['target']}}&nbsp;</h1>
                     <p class="text-center" style="margin-bottom: 0px;">Target</p>
                 </div>
             </div>
@@ -29,7 +31,7 @@
         <div class="col-12 col-md-6 col-lg-4 item" style="margin-bottom: 10px;">
             <div class="card shadow-lg" id="dash-card">
                 <div class="card-body d-xl-flex justify-content-xl-center align-items-xl-center" id="dash-card">
-                    <h1 class="text-center">3 Months</h1>
+                    <h1 class="text-center">{{data['total_months']}} Months</h1>
                     <p class="text-uppercase text-center" style="margin-bottom: 0px;">&nbsp; &nbsp;Created</p>
                 </div>
             </div>
@@ -37,11 +39,45 @@
         <div class="col-12 col-md-6 col-lg-4 item" style="margin-bottom: 10px;">
             <div class="card shadow-lg" id="dash-card">
                 <div class="card-body d-xl-flex justify-content-xl-center align-items-xl-center" id="dash-card">
-                    <h1 class="text-center">56</h1>
+                    <h1 class="text-center">{{data['total_questions']}}</h1>
                     <p class="text-uppercase text-center" style="margin-bottom: 0px;">&nbsp; Questions Asked</p>
                 </div>
             </div>
         </div>
     </div>
+    
 </section>
-    {% endblock content %}
+
+<section class="row d-flex d-lg-flex justify-content-lg-center justify-content-center" id="dashboard" style="margin-top: 0px;padding-top: 0px;">
+    <div class="col-12 col-md-6 col-lg-6 item"> 
+  <form method="POST" id="login-form" action=""style="margin: auto;margin-top:-20px">
+      <h3 class="text-center" style="color: rgb(254,209,54);margin-bottom: 35px;">Activate Month</h3>
+    {{ form2.hidden_tag() }}
+    <fieldset class="form-group">
+        <div class="form-group d-flex d-lg-flex justify-content-lg-center justify-content-center">
+
+            {% if form2.month.errors %}
+                {{ form2.month(class="btn btn-primary dropdown-toggle is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form2.month.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form2.month(class="btn btn-primary dropdown-toggle")}}
+            {% endif %}
+        </div>
+        <div class="form-group d-flex d-lg-flex justify-content-lg-center justify-content-center" >
+            {{ form2.active(class="btn btn-primary shadow input", style="color: rgb(52,58,64);") }}
+        </div>
+        
+    </fieldset>
+  </form>
+    </div>
+  <div class="col-12 col-md-12 col-lg-6 justify-content-lg-center justify-content-center" style="text-align: center">
+      <a class="btn btn-primary shadow input text-uppercase js-scroll-trigger" role="button" href="{{url_for('send')}}" style="color: rgb(52,58,64)">Send Database and Record</a>
+  </div>
+  
+</section>    
+
+{% endblock content %}

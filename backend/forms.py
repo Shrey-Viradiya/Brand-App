@@ -73,3 +73,11 @@ class SurveyForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     questions = FieldList(FormField(Questions))
     submit = SubmitField('Submit Answers')
+
+
+
+class ActiveMonth(FlaskForm):
+    lst = Month.query.filter_by(id = Month.id).all()
+    choices = [(month.id, month.month) for month in lst]
+    month = SelectField('Month', choices= choices, coerce = int)
+    active = SubmitField('Activate Month')
