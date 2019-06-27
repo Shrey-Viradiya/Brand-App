@@ -148,8 +148,8 @@ def addquestion():
 
 
 
-@app.route("/survey", methods=['GET', 'POST'])
-def survey():
+@app.route("/quiz", methods=['GET', 'POST'])
+def quiz():
     if current_user.is_authenticated:
         flash('User must be logged out to access this page','warning')
         return redirect(url_for('dashboard'))
@@ -186,9 +186,39 @@ def survey():
     else:
         flash('Month not declared!!','danger')
         abort(404)
-    return render_template('survey.html',questions = qns,form = form)
+    return render_template('quiz.html',questions = qns,form = form)
+
+@app.route("/dashboard", methods=['GET', 'POST'])
+@login_required
+def dashboard():
+
+    with open('backend/month','r') as f:
+        temp = f.readline()
+    data = {
+    'target' : Month.query.filter_by(month = temp).first().target,
+    'target_achived' : Month.query.filter_by(month = temp).first().target_achived,
+    'total_months' : len(Month.query.all()),
+    'total_questions' : len(Question.query.all()),
+    }
+
+    form2 = ActiveMonth()
 
 
+    if form2.validate_on_submit():
+        with open('backend/month','w') as f:
+            f.writelines(Month.query.filter_by(id = form2.month.data).first().month)
+        
+        return redirect('dashboard')
+    return render_template('dashboard.html',title = 'Dashboard',data = data,form2 = form2,month_active= temp)
+
+
+@app.route("/send")
+@login_required
+def send():
+    send_database()
+    send_record()
+    flash('Database and record send to admin email.','info')
+    return redirect('dashboard')
 
 #Utilities
 def send_record():
@@ -281,34 +311,3 @@ def error_500(error):
 
 # Under Construction
 
-@app.route("/dashboard", methods=['GET', 'POST'])
-@login_required
-def dashboard():
-
-    with open('backend/month','r') as f:
-        temp = f.readline()
-    data = {
-    'target' : Month.query.filter_by(month = temp).first().target,
-    'target_achived' : Month.query.filter_by(month = temp).first().target_achived,
-    'total_months' : len(Month.query.all()),
-    'total_questions' : len(Question.query.all()),
-    }
-
-    form2 = ActiveMonth()
-
-
-    if form2.validate_on_submit():
-        with open('backend/month','w') as f:
-            f.writelines(Month.query.filter_by(id = form2.month.data).first().month)
-        
-        return redirect('dashboard')
-    return render_template('dashboard.html',title = 'Dashboard',data = data,form2 = form2,month_active= temp)
-
-
-@app.route("/send")
-@login_required
-def send():
-    send_database()
-    send_record()
-    flash('Database and record send to admin email.','info')
-    return redirect('dashboard')
