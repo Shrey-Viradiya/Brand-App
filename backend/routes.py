@@ -115,7 +115,7 @@ def request_account():
         send_request_email(req_id)
         flash('An email has been sent to admin to create account. You will be informed if your request is accepted', 'info')
         return redirect(url_for('login'))
-    return render_template('requestaccount.html', title='Reset Password', form=form)
+    return render_template('requestaccount.html', title='Reset Account', form=form)
 
 
 
