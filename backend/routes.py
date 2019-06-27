@@ -40,8 +40,8 @@ def contact():
     form= ContactForm()
     if form.validate_on_submit():
         msg = Message('Contact Request',
-                  sender='shreyviradiya@gmail.com',
-                  recipients=['shreyviradiya@gmail.com'])
+                  sender='brandapp.info@gmail.com',
+                  recipients=['brandapp.info@gmail.com'])
         msg.body = f'''
         {form.name.data} (email id: {form.email.data}) has contacted you with message:
 
@@ -222,7 +222,7 @@ def send():
 
 #Utilities
 def send_record():
-    msg = Message('Record of the month', sender = 'nobody@test.com', recipients = ['shreyviradiya@gmail.com'])
+    msg = Message('Record of the month', sender = 'brandapp.info@gmail.com', recipients = ['brandapp.info@gmail.com'])
     msg.body = "Find the updated record below"
     fp = app.open_resource("record.csv")
     msg.attach('record.csv','record/csv',fp.read())
@@ -233,7 +233,7 @@ def send_record():
 
 
 def send_database():
-    msg = Message('Database Change', sender = 'nobody@test.com', recipients = ['shreyviradiya@gmail.com'])
+    msg = Message('Database Change', sender = 'brandapp.info@gmail.com', recipients = ['brandapp.info@gmail.com'])
     msg.body = "Find the updated database below"
     fp = app.open_resource("site.db")
     msg.attach('site.db','database/db',fp.read())
@@ -253,7 +253,7 @@ def clear_data():
 
 def send_credential(user,form):
     msg = Message('Account Creation Request',
-                  sender='shreyviradiya@gmail.com',
+                  sender='brandapp.info@gmail.com',
                   recipients=[user.email])
     msg.body = f'''
 Your Credentials:
