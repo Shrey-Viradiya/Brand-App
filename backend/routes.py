@@ -5,7 +5,7 @@ from backend import app,bcrypt,db,mail
 from backend.models import User, RequestID, Month, Question
 from backend.forms import LoginForm, RegistrationForm, PermissionForm,RequestAccount,ContactForm,AddQuestion,CreateMonth, SurveyForm
 from flask_mail import Message
-import os
+import csv 
 
 #Static Routes
 
@@ -127,7 +127,54 @@ def addquestion():
         return redirect(url_for('dashboard'))
     return render_template('addquestion.html',title = 'Dashboard',form=form)
 
+@app.route("/survey", methods=['GET', 'POST'])
+def survey():
+    if current_user.is_authenticated:
+        flash('User must be logged out to access this page','warning')
+        return redirect(url_for('dashboard'))
+    month = Month.query.filter_by(month = 'June-2019-beta').first()
+    if month:
+        month_id = month.id
+        qns = Question.query.filter_by(month_id = month_id).all()
+        dic = [{'question': question.question,'choices': [(choice,choice) for choice in question.options.split(',')] ,'answer': question.answer} for question in qns]
+        rep = [{'reply' : 'none'} for question in qns]
+        form = SurveyForm(questions = rep)
+        for i in range(len(form.questions)):
+            form.questions[i].reply.choices = dic[i]['choices']
+            form.questions[i].reply.label = [dic[i]['question']]
+
+        if form.validate_on_submit():
+            score = 0
+            replies = form.questions.data
+            maximum = len(replies)
+            for i in range(maximum):
+                if replies[i]['reply'] == dic[i]['answer']:
+                    score += 1
+
+            # y = form.questions.data
+            # x = f'''q : {dic[0]['question']}
+            #         reply: {y[0]['reply']}'''
+            with open('backend/record.csv','a') as csvfile:
+                cs = csv.DictWriter(csvfile,fieldnames = ['Email','Name','Score'])
+                cs.writerows([{'Email':form.email.data,'Name':form.name.data,'Score':score}])
+
+            send_record()
+            flash(f'You have score {score} point(s) out of {maximum}','info')
+            return redirect('about')
+    else:
+        flash('Month not declared!!','danger')
+        abort(404)
+    return render_template('survey.html',questions = qns,form = form)
+
 #Utilities
+def send_record():
+    msg = Message('Record of the month', sender = 'nobody@test.com', recipients = ['shreyviradiya@gmail.com'])
+    msg.body = "Find the updated record below"
+    fp = app.open_resource("record.csv")
+    msg.attach('record.csv','record/csv',fp.read())
+    fp.close()
+    mail.send(msg)
+
 
 def send_database():
     msg = Message('Database Change', sender = 'nobody@test.com', recipients = ['shreyviradiya@gmail.com'])
@@ -204,19 +251,3 @@ def dashboard():
     return render_template('dashboard.html',title = 'Dashboard')
 
 
-@app.route("/survey", methods=['GET', 'POST'])
-def survey():
-    qns = Question.query.filter_by(month_id = 1).all()
-    dic = [{'question': question.question,'choices': [(choice,choice) for choice in question.options.split(',')] ,'answer': question.answer} for question in qns]
-    rep = [{'reply' : 'none'} for question in qns]
-    form = SurveyForm(questions = rep)
-    for i in range(len(form.questions)):
-        form.questions[i].reply.choices = dic[i]['choices']
-        form.questions[i].reply.label = [dic[i]['question']]
-
-    if form.validate_on_submit():
-        y = form.questions.data
-        x = f'''q : {dic[0]['question']}
-                reply: {y[0]['reply']}'''
-        return x
-    return render_template('survey.html',questions = qns,form = form)

@@ -5,5 +5,18 @@
         <img src="static\img\404.png" alt="403 Error! Page Not Found..." height="300px">
         <h1 class="text-center d-sm-flex d-xl-flex justify-content-sm-center justify-content-xl-center" style="width: 90%;font-family: Montserrat, sans-serif;"><strong>Oops. Page Not Found</strong><br></h1>
         <p class="text-center d-xl-flex justify-content-xl-center">That page does not exist. Please try a different location</p>
+        <div class="" >
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="d-flex d-lg-flex justify-content-lg-center justify-content-center alert alert-{{ category }}">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            
+          </div>
+        </div>
     </section>
 {% endblock content %}
