@@ -252,7 +252,7 @@ def clear_data():
 
 
 def send_credential(user,form):
-    msg = Message('Account Creation Request',
+    msg = Message('Account Creation Success',
                   sender='brandapp.info@gmail.com',
                   recipients=[user.email])
     msg.body = f'''
@@ -269,9 +269,9 @@ Password: {form.password.data}
 
 def send_request_email(req_id):
     token = req_id.get_request_token()
-    msg = Message('Account Creation Success',
-                  sender='shreyviradiya@gmail.com',
-                  recipients=['shreyviradiya@gmail.com'])
+    msg = Message('Account Creation Request',
+                  sender='brandapp.info@gmail.com',
+                  recipients=['brandapp.info@gmail.com'])
     msg.body = f'''
 A person with email id {req_id.email} has requested an account.
 
