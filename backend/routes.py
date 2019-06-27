@@ -7,6 +7,9 @@ from backend.forms import LoginForm, RegistrationForm, PermissionForm,RequestAcc
 from flask_mail import Message
 import csv 
 
+
+
+
 #Static Routes
 
 @app.route("/")
@@ -14,18 +17,26 @@ import csv
 def home():
     return render_template('home.html')
 
+
+
 @app.route("/about")
 def about():
     return render_template('about.html',title = 'About')
+
+
 
 @app.route("/team")
 def team():
     return render_template('team.html',title = 'Team')
 
+
+
 @app.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+
 
 @app.route("/contact", methods=['GET', 'POST'])
 def contact():
@@ -46,6 +57,9 @@ def contact():
         mail.send(msg)
     return render_template('contact.html',title='Contact Us', form=form)
 
+
+
+
 #Dynamic Routes
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -62,6 +76,10 @@ def login():
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
+
+
+
+
 
 @app.route("/register/<token>", methods=['GET', 'POST'])
 def register(token):
@@ -103,6 +121,8 @@ def request_account():
     return render_template('requestaccount.html', title='Reset Password', form=form)
 
 
+
+
 @app.route("/createmonth", methods=['GET', 'POST'])
 @login_required
 def createmonth():
@@ -115,6 +135,8 @@ def createmonth():
         return redirect(url_for('dashboard'))
     return render_template('createmonth.html',title = 'Dashboard',form=form)
 
+
+
 @app.route("/addquestion", methods=['GET', 'POST'])
 @login_required
 def addquestion():
@@ -126,6 +148,8 @@ def addquestion():
         flash('Question is Added successfully!','success')
         return redirect(url_for('dashboard'))
     return render_template('addquestion.html',title = 'Dashboard',form=form)
+
+
 
 @app.route("/survey", methods=['GET', 'POST'])
 def survey():
@@ -166,6 +190,8 @@ def survey():
         abort(404)
     return render_template('survey.html',questions = qns,form = form)
 
+
+
 #Utilities
 def send_record():
     msg = Message('Record of the month', sender = 'nobody@test.com', recipients = ['shreyviradiya@gmail.com'])
@@ -176,6 +202,8 @@ def send_record():
     mail.send(msg)
 
 
+
+
 def send_database():
     msg = Message('Database Change', sender = 'nobody@test.com', recipients = ['shreyviradiya@gmail.com'])
     msg.body = "Find the updated database below"
@@ -184,10 +212,16 @@ def send_database():
     fp.close()
     mail.send(msg)
 
+
+
+
 def clear_data():
     for req in RequestID.query.all():
         db.session.delete(req)
         db.session.commit()
+
+
+
 
 def send_credential(user,form):
     msg = Message('Account Creation Request',
@@ -201,6 +235,9 @@ Username: {user.username}
 Password: {form.password.data}
 '''
     mail.send(msg)
+
+
+
 
 def send_request_email(req_id):
     token = req_id.get_request_token()
@@ -217,6 +254,7 @@ To create an account, visit the following link:
 If you do not want this request to complete then simply ignore this email and no changes will be made.
 '''
     mail.send(msg)
+
 
 
 
